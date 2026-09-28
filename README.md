@@ -1,7 +1,7 @@
 # NEXUS STORE
 
 **"Power your future."** — a premium, single-page tech electronics storefront
-with a full Node/Express backend and a Three.js-powered front end.
+with a full Node/Express backend and a modern, editorial storefront.
 
 Every purchase action (Shop Now, Add to Cart, Get Pro, Checkout, Sign In,
 footer links, etc.) opens a WhatsApp chat pre-filled with the right message.
@@ -22,11 +22,9 @@ server/                Express backend
 public/                 Static frontend (served by Express)
   index.html            Multi-page SPA (hash routing): Home, Products,
                          Deals, Gaming, Pro, About
-  css/styles.css        Design system: neon glassmorphism, 4 display themes
-  js/three-scenes.js    Three.js scenes (chrome spheres/DNA helix on Home,
-                         holographic product boxes, neural-network About page)
-  js/main.js            Routing, cart, search, palette switcher, countdown,
-                         WhatsApp bridge, custom scroll physics
+  css/styles.css        Light editorial design system and responsive layouts
+  images/               High-quality product and lifestyle photography
+  js/main.js            Routing, cart, search, countdown, and WhatsApp bridge
 ```
 
 ## Running it
@@ -101,14 +99,9 @@ Variables before (or right after) the first deploy, then redeploy.
 
 ## Design system
 
-- **Brand colors:** `#0D0D0D` near-black, `#00FF88` neon green,
-  `#7C3AED` electric violet, `#1A1A2E` dark navy, `#00D4FF` cyan accent.
-- **Display Mode switcher:** Cyber Night, Deep Space, Violet Matrix,
-  Holographic — swaps the accent palette live via CSS variables.
-- **Pages:** Home (hero, featured grid, flash deals with countdown,
-  category grid, flagship comparison table, stat cards), Products (full
-  catalog with filters), Deals, Gaming, Pro (membership perks), About.
-- **3D scenes:** chrome spheres + hex prisms morphing between a DNA helix,
-  a "crash scatter," a circuit-board trace grid, and incoming data packets
-  as you scroll the Home page; holographic floating product boxes; a
-  particle neural network that contracts into a brain silhouette on About.
+- **Visual direction:** warm white, forest green, soft sage, and a restrained lime accent.
+- **Typography:** familiar system sans-serif with a subtle editorial serif accent.
+- **Photography:** realistic lifestyle and studio product imagery stored locally for fast, reliable rendering.
+- **Pages:** Home (editorial hero, featured grid, timed offers, category photography,
+  comparison table, service cards), Products (full catalog with filters), Deals,
+  Gaming, Pro (membership perks), and About.

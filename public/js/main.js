@@ -1,5 +1,3 @@
-import { setActiveScene } from "/js/three-scenes.js";
-
 /* =========================================================
    Helpers
    ========================================================= */
@@ -107,7 +105,7 @@ function updateCartUI() {
         if (!p) return "";
         return `
           <div class="cart-item" data-id="${id}">
-            <div class="cart-item-thumb" style="background:${p.gradient}"></div>
+            <div class="cart-item-thumb" style="background:url(${productImage(p)}) center/cover"></div>
             <div class="cart-item-info">
               <h5>${p.name}</h5>
               <span>${fmt(p.price)} each</span>
@@ -181,10 +179,23 @@ function badgeClass(badge) {
   );
 }
 
+function productImage(p) {
+  const images = {
+    smartphones: "/images/phone-editorial.jpg",
+    laptops: "/images/laptop-editorial.jpg",
+    gaming: "/images/gaming-editorial.jpg",
+    audio: "/images/audio-editorial.jpg",
+    cameras: "/images/camera-editorial.jpg",
+    accessories: "/images/accessories-editorial.jpg",
+  };
+  return p.image || images[p.category] || "/images/laptop-editorial.jpg";
+}
+
 function productCardHTML(p) {
   return `
   <article class="product-card" data-id="${p.id}">
-    <div class="pc-image" style="background:${p.gradient}">
+    <div class="pc-image">
+      <img src="${productImage(p)}" alt="${p.name}" loading="lazy" />
       <div class="pc-badges"><span class="badge ${badgeClass(p.badge)}">${p.badge}</span></div>
     </div>
     <div class="pc-body">
@@ -244,8 +255,8 @@ function renderCategories(categories) {
       (c) => `
     <a href="#/products" class="category-cell" data-cat="${c.id}">
       <span class="category-count">${c.count} items</span>
-      <span class="category-icon">${c.icon}</span>
-      <h4>${c.label}</h4>
+      <span class="category-visual"><img src="${productImage({ category: c.id })}" alt="" loading="lazy" /></span>
+      <span class="category-link">${c.label} <b>→</b></span>
     </a>`
     )
     .join("");
@@ -446,7 +457,7 @@ function applyTheme(theme) {
 $$(".palette-opt").forEach((btn) => {
   btn.addEventListener("click", () => applyTheme(btn.dataset.theme));
 });
-applyTheme(localStorage.getItem("nexus_theme") || "cyber-night");
+applyTheme("light");
 
 /* =========================================================
    Mobile nav
@@ -493,60 +504,12 @@ function renderRoute() {
   $$(".route").forEach((sec) => sec.classList.toggle("active", sec.dataset.route === route));
   $$("[data-route-link]").forEach((a) => a.classList.toggle("active", a.dataset.routeLink === route));
 
-  setActiveScene(route);
-
-  // Reset virtual scroll target for the new page.
-  window.scrollTo(0, 0);
-  currentScroll = 0;
-  targetScroll = 0;
-  lastSetScroll = 0;
+  window.scrollTo({ top: 0, behavior: "auto" });
 
   if (route === "home") animateCounters();
 }
 
 window.addEventListener("hashchange", renderRoute);
-
-/* =========================================================
-   Custom scroll physics
-   LERP 0.12 · WHEEL_MULT 1.2 (mouse-repulsion lives in three-scenes.js)
-   Wheel input is smoothed; touch / keyboard / scrollbar pass through natively.
-   ========================================================= */
-const LERP = 0.12;
-const WHEEL_MULT = 1.2;
-const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
-
-let currentScroll = window.scrollY;
-let targetScroll = window.scrollY;
-let lastSetScroll = window.scrollY;
-
-if (!isCoarsePointer) {
-  window.addEventListener(
-    "wheel",
-    (e) => {
-      if (document.body.classList.contains("no-scroll")) return;
-      e.preventDefault();
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      targetScroll = Math.max(0, Math.min(max, targetScroll + e.deltaY * WHEEL_MULT));
-    },
-    { passive: false }
-  );
-}
-
-function scrollLoop() {
-  if (Math.abs(window.scrollY - lastSetScroll) > 1.5) {
-    currentScroll = window.scrollY;
-    targetScroll = window.scrollY;
-  }
-  currentScroll += (targetScroll - currentScroll) * LERP;
-  if (Math.abs(currentScroll - window.scrollY) > 0.4) {
-    window.scrollTo(0, currentScroll);
-    lastSetScroll = currentScroll;
-  } else {
-    lastSetScroll = window.scrollY;
-  }
-  requestAnimationFrame(scrollLoop);
-}
-scrollLoop();
 
 /* Header hide-on-scroll-down */
 let lastY = window.scrollY;
@@ -561,7 +524,7 @@ window.addEventListener("scroll", () => {
 /* =========================================================
    Loader sequence
    ========================================================= */
-const loaderSteps = ["Booting system...", "Loading drivers...", "Connecting to inventory...", "Ready."];
+const loaderSteps = ["Preparing the collection…", "Checking live inventory…", "Adding the finishing touches…", "Ready."];
 function runLoader() {
   const stepEl = $("#loaderStep");
   const bar = $("#loaderBarFill");
@@ -575,9 +538,9 @@ function runLoader() {
     }
     if (i >= loaderSteps.length - 1) {
       clearInterval(interval);
-      setTimeout(() => $("#loader").classList.add("hidden"), 500);
+      setTimeout(() => $("#loader").classList.add("hidden"), 150);
     }
-  }, 480);
+  }, 180);
 }
 
 /* =========================================================
