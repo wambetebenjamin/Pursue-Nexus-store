@@ -72,6 +72,31 @@ bundle, only the `Location` response header at click-time.
 | POST   | `/api/checkout`       | `{ items, note, src }` → `{ orderId, url }`    |
 | GET    | `/go/whatsapp`        | 302 redirect fallback                          |
 
+## Deploying to Vercel
+
+This repo is zero-config for Vercel:
+
+- `public/` is served directly as static assets (Vercel auto-serves a
+  top-level `public` directory).
+- `api/[...slug].js` is a catch-all serverless function that hands every
+  `/api/**` request straight to the same Express app used locally
+  (`server/server.js`).
+- `vercel.json` adds one rewrite so the `/go/whatsapp` fallback link also
+  resolves in production.
+
+**[Deploy to Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fwambetebenjamin%2FPursue-Nexus-store%2Ftree%2Farena%2F01a0e7b8-pursue-nexus-store&env=WHATSAPP_NUMBER&envDescription=Digits-only%20WhatsApp%20number%20used%20to%20build%20wa.me%20checkout%20links%20(country%20code%2C%20no%20%2B%2C%20no%20spaces)&project-name=nexus-store&repository-name=nexus-store)**
+
+When you click it, Vercel will:
+1. Ask you to fork the repo into your own GitHub/GitLab/Bitbucket account.
+2. Prompt you to fill in the `WHATSAPP_NUMBER` environment variable
+   (digits only, e.g. `254112272061` — no `+`, no spaces). This is the only
+   place the number needs to be configured; it's never committed to the repo.
+3. Deploy automatically — no build command or extra settings required.
+
+If you deploy from the Vercel dashboard manually instead of the button, just
+make sure to add `WHATSAPP_NUMBER` under Project → Settings → Environment
+Variables before (or right after) the first deploy, then redeploy.
+
 ## Design system
 
 - **Brand colors:** `#0D0D0D` near-black, `#00FF88` neon green,

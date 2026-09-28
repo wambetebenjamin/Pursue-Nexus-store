@@ -1,8 +1,14 @@
-require("dotenv").config();
-
 const path = require("path");
 const fs = require("fs");
 const crypto = require("crypto");
+
+// Load server/.env explicitly (by absolute path) so this works no matter
+// what the current working directory is — e.g. `node server.js` from
+// inside /server, or this file being require()'d from /api on Vercel.
+// On Vercel itself there is no .env file; env vars are injected by the
+// platform directly, and dotenv silently no-ops if the file is missing.
+require("dotenv").config({ path: path.join(__dirname, ".env") });
+
 const express = require("express");
 const cors = require("cors");
 const compression = require("compression");
@@ -23,7 +29,13 @@ if (!WHATSAPP_NUMBER) {
   console.warn("[nexus] WARNING: WHATSAPP_NUMBER is not set in server/.env");
 }
 
-const ORDERS_FILE = path.join(__dirname, "data", "orders.json");
+// Serverless platforms (Vercel, etc.) ship a read-only filesystem except for
+// /tmp, so fall back to that when we detect we're running there. Locally the
+// order log persists in server/data/orders.json.
+const ORDERS_FILE = process.env.VERCEL
+  ? path.join("/tmp", "nexus-orders.json")
+  : path.join(__dirname, "data", "orders.json");
+
 function readOrders() {
   try {
     return JSON.parse(fs.readFileSync(ORDERS_FILE, "utf8"));
@@ -32,9 +44,14 @@ function readOrders() {
   }
 }
 function appendOrder(order) {
-  const orders = readOrders();
-  orders.push(order);
-  fs.writeFileSync(ORDERS_FILE, JSON.stringify(orders, null, 2));
+  try {
+    const orders = readOrders();
+    orders.push(order);
+    fs.writeFileSync(ORDERS_FILE, JSON.stringify(orders, null, 2));
+  } catch (err) {
+    // Never let order logging break the checkout flow.
+    console.warn("[nexus] Could not persist order log:", err.message);
+  }
 }
 
 function buildWhatsAppUrl(text) {
@@ -160,12 +177,17 @@ app.post("/api/checkout", contactLimiter, (req, res) => {
 });
 
 // Plain-link fallback for non-JS contexts (still resolves server-side only).
-app.get("/go/whatsapp", contactLimiter, (req, res) => {
+// Registered at both paths so it works identically in local dev (Express
+// serves every path) and on Vercel (only /api/** reaches this function;
+// static assets under /public are served directly by the platform).
+function goWhatsapp(req, res) {
   const { src = "link", text = "" } = req.query;
   const message =
     text || `Hi NEXUS STORE 👋 I'm reaching out from the website (${src}).`;
   res.redirect(302, buildWhatsAppUrl(message));
-});
+}
+app.get("/go/whatsapp", contactLimiter, goWhatsapp);
+app.get("/api/go/whatsapp", contactLimiter, goWhatsapp);
 
 // ---------- Static frontend ----------
 const PUBLIC_DIR = path.join(__dirname, "..", "public");
@@ -178,6 +200,14 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, "index.html"));
 });
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`NEXUS STORE server running on http://0.0.0.0:${PORT}`);
-});
+// Only bind a real port for local/standalone runs. On Vercel, this module is
+// imported and invoked as a serverless request handler instead — calling
+// app.listen() there would be pointless (and the platform never runs this
+// file directly), so we guard it.
+if (require.main === module) {
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`NEXUS STORE server running on http://0.0.0.0:${PORT}`);
+  });
+}
+
+module.exports = app;
