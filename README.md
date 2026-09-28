@@ -84,7 +84,9 @@ This repo is zero-config for Vercel:
 - `vercel.json` adds one rewrite so the `/go/whatsapp` fallback link also
   resolves in production.
 
-**[Deploy to Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fwambetebenjamin%2FPursue-Nexus-store%2Ftree%2Farena%2F01a0e7b8-pursue-nexus-store&env=WHATSAPP_NUMBER&envDescription=Digits-only%20WhatsApp%20number%20used%20to%20build%20wa.me%20checkout%20links%20(country%20code%2C%20no%20%2B%2C%20no%20spaces)&project-name=nexus-store&repository-name=nexus-store)**
+**[Deploy to Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fwambetebenjamin%2FPursue-Nexus-store&env=WHATSAPP_NUMBER&envDescription=Digits-only%20WhatsApp%20number%20used%20to%20build%20wa.me%20checkout%20links%20(country%20code%2C%20no%20%2B%2C%20no%20spaces)&project-name=nexus-store&repository-name=nexus-store)**
+
+(This points at the `main` branch, which now has everything merged in — no branch name needed in the URL.)
 
 When you click it, Vercel will:
 1. Ask you to fork the repo into your own GitHub/GitLab/Bitbucket account.
