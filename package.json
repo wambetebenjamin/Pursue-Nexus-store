@@ -1,0 +1,11 @@
+{
+  "name": "nexus-store",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NEXUS STORE — premium tech electronics storefront with WhatsApp checkout.",
+  "scripts": {
+    "install:server": "npm install --prefix server",
+    "start": "npm run start --prefix server",
+    "dev": "npm run dev --prefix server"
+  }
+}
