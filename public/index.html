@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NEXUS STORE — Power your future.</title>
+<meta name="description" content="NEXUS STORE — premium tech electronics. Smartphones, laptops, gaming, audio, cameras & accessories. Chat with us on WhatsApp to order." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css" />
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body data-theme="cyber-night">
+
+<!-- ===================== LOADER ===================== -->
+<div id="loader" class="loader">
+  <svg class="loader-circuit" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet">
+    <g class="circuit-lines">
+      <path d="M0,50 H120 V20 H260" />
+      <path d="M0,150 H80 V220 H220 V150 H400" />
+      <path d="M0,250 H160 V280 H400" />
+      <path d="M200,0 V60 H340 V300" />
+      <path d="M60,0 V90 H180 V150" />
+      <path d="M340,0 V40 H400" />
+    </g>
+    <g class="circuit-nodes">
+      <circle cx="120" cy="50" r="4" />
+      <circle cx="260" cy="20" r="4" />
+      <circle cx="220" cy="220" r="4" />
+      <circle cx="160" cy="250" r="4" />
+      <circle cx="200" cy="60" r="4" />
+      <circle cx="340" cy="150" r="4" />
+      <circle cx="180" cy="90" r="4" />
+    </g>
+  </svg>
+  <div class="loader-logo">NEXUS<span>STORE</span></div>
+  <div class="loader-step" id="loaderStep">Booting system...</div>
+  <div class="loader-bar"><span id="loaderBarFill"></span></div>
+</div>
+
+<!-- ===================== BACKGROUND CANVAS ===================== -->
+<canvas id="scene-canvas"></canvas>
+<div class="scroll-glow" id="scrollGlow" aria-hidden="true"></div>
+
+<!-- ===================== HEADER ===================== -->
+<header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <a href="#/home" class="brand">
+      <span class="brand-glyph">
+        <svg viewBox="0 0 32 32" width="26" height="26" fill="none">
+          <path d="M4 8 H14 V4" stroke="currentColor" stroke-width="2"/>
+          <path d="M28 24 H18 V28" stroke="currentColor" stroke-width="2"/>
+          <circle cx="16" cy="16" r="6" stroke="currentColor" stroke-width="2"/>
+          <circle cx="4" cy="8" r="2" fill="currentColor"/>
+          <circle cx="28" cy="24" r="2" fill="currentColor"/>
+        </svg>
+      </span>
+      <span class="brand-name">NEXUS<span class="brand-sub">STORE</span></span>
+    </a>
+
+    <nav class="main-nav" id="mainNav">
+      <a href="#/products" data-route-link="products">Products</a>
+      <a href="#/deals" data-route-link="deals">Deals</a>
+      <a href="#/gaming" data-route-link="gaming">Gaming</a>
+      <a href="#/pro" data-route-link="pro">Pro</a>
+      <a href="#/about" data-route-link="about">About</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-btn" id="searchBtn" aria-label="Search">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <button class="icon-btn" id="paletteBtn" aria-label="Display mode">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="8" r="1.4" fill="currentColor"/><circle cx="16" cy="13" r="1.4" fill="currentColor"/><circle cx="8" cy="13" r="1.4" fill="currentColor"/></svg>
+      </button>
+      <button class="icon-btn cart-btn" id="cartBtn" aria-label="Cart">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none"><path d="M3 4h2l2.4 12.2a2 2 0 002 1.8h7.7a2 2 0 002-1.6L20 8H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="20.5" r="1.3" fill="currentColor"/><circle cx="17.5" cy="20.5" r="1.3" fill="currentColor"/></svg>
+        <span class="cart-badge" id="cartBadge">0</span>
+      </button>
+      <button class="btn btn-ghost btn-pill" data-wa data-wa-src="header-signin" data-wa-msg="Hi NEXUS STORE, I'd like to sign in / manage my account.">Sign In</button>
+      <button class="btn btn-neon btn-pill" data-wa data-wa-src="header-get-pro" data-wa-msg="Hi NEXUS STORE, I'd like to learn about NEXUS Pro membership.">Get Pro</button>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+
+  <!-- Mobile nav -->
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#/products">Products</a>
+    <a href="#/deals">Deals</a>
+    <a href="#/gaming">Gaming</a>
+    <a href="#/pro">Pro</a>
+    <a href="#/about">About</a>
+    <button class="btn btn-ghost btn-pill" data-wa data-wa-src="mobile-signin">Sign In</button>
+    <button class="btn btn-neon btn-pill" data-wa data-wa-src="mobile-get-pro">Get Pro</button>
+  </div>
+</header>
+
+<!-- ===================== SEARCH OVERLAY ===================== -->
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-box">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <input type="text" id="searchInput" placeholder="Search smartphones, laptops, gaming gear..." autocomplete="off" />
+    <button id="searchClose" aria-label="Close">✕</button>
+  </div>
+  <div class="search-results" id="searchResults"></div>
+</div>
+
+<!-- ===================== PALETTE DRAWER ===================== -->
+<div class="palette-drawer" id="paletteDrawer">
+  <div class="palette-head">
+    <h3>Display Mode</h3>
+    <button id="paletteClose" aria-label="Close">✕</button>
+  </div>
+  <p class="palette-note">Switch between display environments. The product showcase adapts to your preference.</p>
+  <div class="palette-options">
+    <button class="palette-opt active" data-theme="cyber-night">
+      <span class="palette-swatch" style="background:linear-gradient(135deg,#00FF88,#0D0D0D)"></span>
+      <span>Cyber Night</span>
+    </button>
+    <button class="palette-opt" data-theme="deep-space">
+      <span class="palette-swatch" style="background:linear-gradient(135deg,#00D4FF,#000014)"></span>
+      <span>Deep Space</span>
+    </button>
+    <button class="palette-opt" data-theme="violet-matrix">
+      <span class="palette-swatch" style="background:linear-gradient(135deg,#7C3AED,#0D0D0D)"></span>
+      <span>Violet Matrix</span>
+    </button>
+    <button class="palette-opt" data-theme="holographic">
+      <span class="palette-swatch" style="background:linear-gradient(135deg,#FF6EC7,#0D0D0D)"></span>
+      <span>Holographic</span>
+    </button>
+  </div>
+</div>
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+<!-- ===================== CART DRAWER ===================== -->
+<div class="cart-drawer" id="cartDrawer">
+  <div class="palette-head">
+    <h3>Your Cart</h3>
+    <button id="cartClose" aria-label="Close">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer">
+    <div class="cart-total-row"><span>Total</span><strong id="cartTotal">$0.00</strong></div>
+    <button class="btn btn-neon btn-block" id="checkoutBtn">Checkout via WhatsApp →</button>
+    <p class="cart-hint">We'll open WhatsApp with your order pre-filled — nothing is charged here.</p>
+  </div>
+</div>
+
+<!-- ===================== MAIN APP ===================== -->
+<main id="app">
+
+<!-- ################## HOME ################## -->
+<section class="route" data-route="home" id="route-home">
+
+  <section class="hero">
+    <div class="hero-grid">
+      <div class="hero-left" data-reveal>
+        <span class="eyebrow">[ New Drop · Limited Stock ]</span>
+        <h1 class="hero-title">Power your <br/><span class="grad-text">future.</span></h1>
+        <p class="hero-sub">Cutting-edge tech. Unbeatable specs. Next-day delivery.</p>
+        <div class="cta-row">
+          <button class="btn btn-neon btn-lg" data-wa data-wa-src="hero-shop-now" data-wa-msg="Hi NEXUS STORE, I just landed on your site and I'm ready to shop — what's trending right now?">Shop Now →</button>
+          <a href="#/products" class="btn btn-ghost btn-lg">See Specs</a>
+        </div>
+        <div class="counter-strip">
+          <div class="counter-item"><span class="counter-num" data-count="10000">0</span><span>+ Products</span></div>
+          <div class="counter-divider"></div>
+          <div class="counter-item"><span class="counter-num" data-count="4.9" data-decimal="1">0</span><span>★ Rating</span></div>
+          <div class="counter-divider"></div>
+          <div class="counter-item"><span class="counter-static">Free</span><span>Shipping</span></div>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="floating-card" id="floatingCard">
+          <div class="floating-card-inner">
+            <div class="fc-image" style="background:linear-gradient(135deg,#00FF88,#00D4FF,#7C3AED); background-size:220% 220%;"></div>
+            <div class="fc-body">
+              <div class="fc-title-row">
+                <h4>Nova X1 Pro</h4>
+                <span class="badge badge-new">NEW</span>
+              </div>
+              <div class="fc-chips">
+                <span class="chip">16GB RAM</span>
+                <span class="chip">512GB</span>
+                <span class="chip">Nexus A7</span>
+              </div>
+              <div class="fc-price-row">
+                <div>
+                  <span class="price-old">$1,299</span>
+                  <span class="price-new">$1,099</span>
+                </div>
+                <button class="btn btn-neon btn-sm" data-wa data-wa-src="hero-card-add" data-wa-msg="Hi NEXUS STORE, I want to add the Nova X1 Pro to my order.">Add to Cart</button>
+              </div>
+              <p class="urgency">⚡ Only 3 left in stock!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-cue">Scroll<span></span></div>
+  </section>
+
+  <!-- FEATURED PRODUCTS -->
+  <section class="section" id="featured">
+    <div class="section-head">
+      <span class="eyebrow">Handpicked</span>
+      <h2>Featured Products</h2>
+    </div>
+    <div class="product-grid" id="featuredGrid"></div>
+  </section>
+
+  <!-- DEALS -->
+  <section class="deals-section">
+    <div class="deals-bgtext">DEALS</div>
+    <div class="deals-content">
+      <div class="section-head">
+        <span class="eyebrow">Limited time</span>
+        <h2>Flash Deals</h2>
+      </div>
+      <div class="countdown" id="countdown">
+        <div class="cd-unit"><span id="cdH">00</span><label>Hours</label></div>
+        <span class="cd-colon">:</span>
+        <div class="cd-unit"><span id="cdM">00</span><label>Minutes</label></div>
+        <span class="cd-colon">:</span>
+        <div class="cd-unit"><span id="cdS">00</span><label>Seconds</label></div>
+      </div>
+      <div class="deal-scroll" id="dealScroll"></div>
+    </div>
+  </section>
+
+  <!-- CATEGORY GRID -->
+  <section class="section">
+    <div class="section-head">
+      <span class="eyebrow">Browse</span>
+      <h2>Shop by Category</h2>
+    </div>
+    <div class="category-grid" id="categoryGrid"></div>
+  </section>
+
+  <!-- COMPARISON TABLE -->
+  <section class="section">
+    <div class="section-head">
+      <span class="eyebrow">Compare</span>
+      <h2>Flagship Comparison</h2>
+    </div>
+    <div class="compare-wrap">
+      <table class="compare-table" id="compareTable"></table>
+    </div>
+  </section>
+
+  <!-- STAT CARDS -->
+  <section class="section stats-section">
+    <div class="stat-card">
+      <span class="stat-num">01</span>
+      <h3>Inventory</h3>
+      <p class="stat-big">50,000+ SKUs</p>
+      <p class="stat-sub">In-stock guarantee</p>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num">02</span>
+      <h3>Delivery</h3>
+      <p class="stat-big">Next-Day</p>
+      <p class="stat-sub">Free over $50</p>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num">03</span>
+      <h3>Warranty</h3>
+      <p class="stat-big">2-Year Extended</p>
+      <p class="stat-sub">Zero-hassle returns</p>
+    </div>
+  </section>
+
+</section>
+
+<!-- ################## PRODUCTS ################## -->
+<section class="route" data-route="products" id="route-products">
+  <div class="page-hero">
+    <span class="eyebrow">Full Catalog</span>
+    <h1>All Products</h1>
+    <p>Browse the entire NEXUS lineup. Filter by category, chat to order.</p>
+  </div>
+  <div class="filter-bar" id="filterBar">
+    <button class="filter-chip active" data-filter="all">All</button>
+  </div>
+  <div class="product-grid" id="allProductsGrid"></div>
+</section>
+
+<!-- ################## DEALS ################## -->
+<section class="route" data-route="deals" id="route-deals">
+  <div class="page-hero">
+    <span class="eyebrow">Today only</span>
+    <h1>Deals &amp; Clearance</h1>
+    <p>Deep cuts on flagship tech. Stock is moving fast — chat now to lock your price.</p>
+  </div>
+  <div class="countdown countdown-lg" id="countdownPage">
+    <div class="cd-unit"><span id="cdH2">00</span><label>Hours</label></div>
+    <span class="cd-colon">:</span>
+    <div class="cd-unit"><span id="cdM2">00</span><label>Minutes</label></div>
+    <span class="cd-colon">:</span>
+    <div class="cd-unit"><span id="cdS2">00</span><label>Seconds</label></div>
+  </div>
+  <div class="product-grid" id="dealsGrid"></div>
+</section>
+
+<!-- ################## GAMING ################## -->
+<section class="route" data-route="gaming" id="route-gaming">
+  <div class="page-hero page-hero-gaming">
+    <span class="eyebrow">Level up</span>
+    <h1>Gaming Rigs &amp; Gear</h1>
+    <p>Consoles, controllers, and battlestations built for zero-lag domination.</p>
+  </div>
+  <div class="product-grid" id="gamingGrid"></div>
+</section>
+
+<!-- ################## PRO ################## -->
+<section class="route" data-route="pro" id="route-pro">
+  <div class="page-hero page-hero-pro">
+    <span class="eyebrow">Members only</span>
+    <h1>NEXUS Pro</h1>
+    <p>Priority stock access, extended warranty, concierge support and exclusive drops.</p>
+  </div>
+  <div class="pro-perks">
+    <div class="pro-perk"><span>⚡</span><h4>Priority Access</h4><p>First in line for limited drops.</p></div>
+    <div class="pro-perk"><span>🛡️</span><h4>Extended Warranty</h4><p>+1 year of coverage, zero cost.</p></div>
+    <div class="pro-perk"><span>🚚</span><h4>Free Express</h4><p>Guaranteed next-day, always free.</p></div>
+    <div class="pro-perk"><span>💬</span><h4>Concierge Support</h4><p>Direct WhatsApp line to our specialists.</p></div>
+  </div>
+  <div class="pro-cta">
+    <h2>Ready to go Pro?</h2>
+    <button class="btn btn-neon btn-lg" data-wa data-wa-src="pro-page-cta" data-wa-msg="Hi NEXUS STORE, I want to sign up for NEXUS Pro membership.">Chat to Join Pro →</button>
+  </div>
+  <div class="product-grid" id="proGrid"></div>
+</section>
+
+<!-- ################## ABOUT ################## -->
+<section class="route" data-route="about" id="route-about">
+  <div class="page-hero">
+    <span class="eyebrow">Our story</span>
+    <h1>About NEXUS STORE</h1>
+    <p>We connect people to tomorrow's technology, today. Founded by engineers,
+       obsessed with specs, and built for a generation that expects both power
+       and design.</p>
+  </div>
+  <div class="about-grid">
+    <div class="about-copy">
+      <h3>Why NEXUS</h3>
+      <p>Every product on this shelf is verified, benchmarked, and backed by a
+         real human team — reachable in seconds, not tickets. No call centers.
+         No hold music. Just a direct line to people who know their specs.</p>
+      <h3>How ordering works</h3>
+      <p>Browse, add to cart, and check out — we hand your order straight to
+         our team over chat so you get real-time stock confirmation, bundle
+         deals, and delivery scheduling from an actual person.</p>
+      <button class="btn btn-neon" data-wa data-wa-src="about-talk" data-wa-msg="Hi NEXUS STORE, I'd like to know more about the company.">Talk to Us →</button>
+    </div>
+    <div class="about-stats">
+      <div class="stat-card"><span class="stat-num">04</span><h3>Founded</h3><p class="stat-big">2019</p><p class="stat-sub">5 years of trust</p></div>
+      <div class="stat-card"><span class="stat-num">05</span><h3>Customers</h3><p class="stat-big">120,000+</p><p class="stat-sub">across 30 countries</p></div>
+      <div class="stat-card"><span class="stat-num">06</span><h3>Response Time</h3><p class="stat-big">&lt; 5 min</p><p class="stat-sub">average chat reply</p></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-footer">
+  <div class="marquee">
+    <div class="marquee-track">
+      <span>Power Your Future <i class="dot"></i> Free Next-Day Delivery <i class="dot"></i> 50,000+ Products <i class="dot"></i> Shop Now <i class="dot"></i></span>
+      <span>Power Your Future <i class="dot"></i> Free Next-Day Delivery <i class="dot"></i> 50,000+ Products <i class="dot"></i> Shop Now <i class="dot"></i></span>
+    </div>
+  </div>
+
+  <div class="footer-main">
+    <div class="footer-cta">
+      <h2>Build Your Setup</h2>
+      <button class="btn btn-neon btn-lg" data-wa data-wa-src="footer-build-setup" data-wa-msg="Hi NEXUS STORE, I'd like help building a custom tech setup.">Build Your Setup →</button>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <h5>Products</h5>
+        <a href="#/products">Smartphones</a>
+        <a href="#/products">Laptops</a>
+        <a href="#/gaming">Gaming</a>
+        <a href="#/products">Audio</a>
+      </div>
+      <div class="footer-col">
+        <h5>Support</h5>
+        <a href="#" data-wa data-wa-src="footer-track-order">Track Order</a>
+        <a href="#" data-wa data-wa-src="footer-returns">Returns</a>
+        <a href="#" data-wa data-wa-src="footer-warranty">Warranty</a>
+        <a href="#" data-wa data-wa-src="footer-contact">Contact Us</a>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <a href="#/about">About</a>
+        <a href="#/pro">NEXUS Pro</a>
+        <a href="#" data-wa data-wa-src="footer-careers">Careers</a>
+        <a href="#" data-wa data-wa-src="footer-press">Press</a>
+      </div>
+      <div class="footer-col">
+        <h5>Legal</h5>
+        <a href="#" data-wa data-wa-src="footer-privacy">Privacy Policy</a>
+        <a href="#" data-wa data-wa-src="footer-terms">Terms of Service</a>
+        <a href="#" data-wa data-wa-src="footer-cookies">Cookies</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© <span id="year"></span> NEXUS STORE. All rights reserved.</span>
+    <span>Chat with us — we reply in minutes.</span>
+  </div>
+</footer>
+
+<!-- ===================== TOAST ===================== -->
+<div class="toast" id="toast"></div>
+
+<script type="module" src="/js/three-scenes.js"></script>
+<script type="module" src="/js/main.js"></script>
+</body>
+</html>
